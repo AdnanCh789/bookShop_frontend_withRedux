@@ -1,7 +1,6 @@
 import React from "react";
 import { getCurrentUser } from "../helper/helper";
 import { NavLink } from "react-router-dom";
-import UserDashboard from "../user/dashboard/UserDashboard";
 
 function Menu() {
   const user = getCurrentUser();

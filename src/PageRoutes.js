@@ -8,15 +8,16 @@ import NotFound from "./components/core/NotFound";
 import Protected from "./components/auth/Protected";
 import AdminProtected from "./components/auth/AdminProtected";
 
-import App from "./App";
 import CreateCategory from "./components/admin/category/CreateCategory";
+import CreateProduct from "./components/admin/product/CreateProduct";
+import Home from "./components/core/Home";
 
 const PageRoutes = () => {
   return (
     <Fragment>
       <Menu />
       <Routes>
-        <Route path="/" exact element={<App />} />
+        <Route path="/" exact element={<Home />} />
         <Route path="/signin" exact element={<Signin />} />
         <Route path="/signup" exact element={<Signup />} />
         <Route path="/signout" exact element={<Signout />} />
@@ -26,6 +27,11 @@ const PageRoutes = () => {
           path="/create/category"
           exact
           element={<AdminProtected children={<CreateCategory />} />}
+        />
+        <Route
+          path="/create/product"
+          exact
+          element={<AdminProtected children={<CreateProduct />} />}
         />
 
         <Route path="/not-found" element={<NotFound />} />

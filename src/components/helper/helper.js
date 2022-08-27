@@ -11,13 +11,14 @@ export const ShowError = ({ error }) => {
     </div>
   );
 };
-export const ShowSuccess = ({ success, successMessage, link, label }) => {
+
+export const ShowSuccess = ({ success, successMessage }) => {
   return (
     <div
       className="alert alert-info"
       style={{ display: success ? "" : "none" }}
     >
-      {successMessage} <Link to={link}>{label}</Link>
+      {successMessage}
     </div>
   );
 };

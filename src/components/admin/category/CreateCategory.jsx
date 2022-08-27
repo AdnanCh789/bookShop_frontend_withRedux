@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
 import CategoryForm from "./CategoryForm";
 import Layout from "../../core/Layout";
 import { ShowError } from "../../helper/helper";
@@ -36,9 +37,10 @@ function CreateCategory(props) {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    //http post request
+
+    // http post request
     try {
-      const response = await http.post(
+      await http.post(
         `${API}/category/create/${user._id}`,
         bodyParameters,
         config
@@ -61,9 +63,7 @@ function CreateCategory(props) {
         <ShowError error={error} />
         <ShowSuccess
           success={success}
-          link="/user/dashboard"
           successMessage="New Category Created.."
-          label="Dashboard"
         />
         <CategoryForm
           name="category"
@@ -72,6 +72,10 @@ function CreateCategory(props) {
           onChange={handleChange("name")}
           onSubmit={handleSubmit}
         />
+        <br />
+        <NavLink style={{ textDecoration: "none" }} to="/admin/dashboard">
+          Back to DashBoard
+        </NavLink>
       </Layout>
     </div>
   );
