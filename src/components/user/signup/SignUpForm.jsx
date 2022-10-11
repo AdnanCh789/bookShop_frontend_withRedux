@@ -1,10 +1,7 @@
 import React, { useState } from "react";
-
-import http from "../../../services/httpService";
 import Input from "../../common/Input";
 import { ShowSuccess, ShowError } from "../../helper/helper";
-
-import { API } from "../../../config";
+import { signup } from "../userApi";
 
 function SignUpForm(props) {
   const [values, setValues] = useState({
@@ -23,18 +20,11 @@ function SignUpForm(props) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const reponse = await http.post(`${API}/signup`, {
-        name,
-        email,
-        password,
-      });
-
+      let body = { name, email, password };
+      await signup(body);
       setValues({ ...values, error: "", success: true });
     } catch (ex) {
-      if (ex.response && ex.response.status === 400) {
-        console.log(ex.response);
-        setValues({ ...values, error: ex.response.data, success: false });
-      }
+      setValues({ ...values, error: ex.response.data, success: false });
     }
   };
 
@@ -45,7 +35,7 @@ function SignUpForm(props) {
         success={success}
         label="SignIn"
         link="/signin"
-        successMessage="Account Successfully Created.."
+        successMessage="Account Successfully Created. Please Login"
       />
       <form onSubmit={handleSubmit} className="mt-3">
         <Input

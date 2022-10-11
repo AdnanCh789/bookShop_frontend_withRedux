@@ -5,11 +5,15 @@ import Layout from "../../core/Layout";
 import { ShowError } from "../../helper/helper";
 import { ShowSuccess } from "../../helper/helper";
 import http from "../../../services/httpService";
-
 import { getCurrentUser } from "../../helper/helper";
 import { API } from "../../../config";
+//
+//
+import { useDispatch } from "react-redux";
+import { addCategory } from "./categorySlice";
 
 function CreateCategory(props) {
+  const dispatch = useDispatch();
   const [values, setValues] = useState({
     name: "",
     error: false,
@@ -19,10 +23,7 @@ function CreateCategory(props) {
   const { name, error, success } = values;
 
   const user = getCurrentUser();
-  const str = localStorage.getItem("jwt");
-
-  // to remove  double quotes from the sring
-  const token = str.replace(/^"(.+(?="$))"$/, "$1");
+  const token = JSON.parse(localStorage.getItem("jwt"));
 
   const config = {
     headers: { Authorization: `Bearer ${token}` },
@@ -37,14 +38,13 @@ function CreateCategory(props) {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // http post request
     try {
-      await http.post(
+      const { data } = await http.post(
         `${API}/category/create/${user._id}`,
         bodyParameters,
         config
       );
+      dispatch(addCategory(data));
       setValues({ ...values, error: false, success: true });
     } catch (ex) {
       if (ex) {

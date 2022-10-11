@@ -1,11 +1,19 @@
-import React from "react";
-import { Navigate } from "react-router-dom";
-import http from "../../../services/httpService";
-import { API } from "../../../config";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { removeUser } from "../userSlice";
 
 const SignOut = () => {
-  localStorage.removeItem("jwt");
-  return <Navigate to="/signin" />;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    localStorage.removeItem("jwt");
+    dispatch(removeUser());
+    navigate("../");
+  }, []);
+
+  return null;
 };
 
 export default SignOut;

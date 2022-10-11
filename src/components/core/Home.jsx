@@ -1,37 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Menu from "./Menu";
-import http from "../../services/httpService";
-import { API } from "../../config";
 import Layout from "./Layout";
+import Search from "./Search";
 import ProductCard from "./ProductCard";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getProducts,
+  statusArrival,
+  statusSell,
+  productsBySell,
+  productsByArrival,
+} from "../admin/product/productSlice";
 
 const Home = () => {
-  const [productsBySell, setProductsBySell] = useState([]);
-
-  const soldProducts = async () => {
-    try {
-      const { data } = await http.get(
-        `${API}/product/?sortBy=sold&order=asc&limit=3`
-      );
-      //   console.log(data);
-      setProductsBySell({ productsBySell: data });
-      //   console.log(productsBySell);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const dispatch = useDispatch();
+  const arrivalStatus = useSelector(statusArrival);
+  const sellStatus = useSelector(statusSell);
+  const productBySell = useSelector(productsByArrival);
+  const productByArrival = useSelector(productsBySell);
 
   useEffect(() => {
-    soldProducts();
+    if (sellStatus === "idle") dispatch(getProducts("sold"));
+    if (arrivalStatus === "idle") dispatch(getProducts("createdAt"));
   }, []);
-
-  const example = () => {
-    if (productsBySell.length !== 0 && typeof productsBySell === "object") {
-      productsBySell.map((p, i) => <ProductCard key={i} product={p} />);
-    } else {
-      return;
-    }
-  };
 
   return (
     <React.Fragment>
@@ -41,13 +32,23 @@ const Home = () => {
         description="E-Commerce App for web development courses and books."
         className="container-fluid"
       >
-        <h2>Products By Sell</h2>
-        {/* {example()} */}
-
-        {console.log(productsBySell)}
-        {/* {productsBySell.map((product, i) => (
-          <ProductCard key={i} product={product} />
-        ))} */}
+        <div>
+          <Search />
+        </div>
+        <div className="row">
+          <div className="col-6">
+            <h2>Best Sells</h2>
+            {productBySell?.map((product, i) => (
+              <ProductCard key={i} product={product} />
+            ))}
+          </div>
+          <div className="col-6">
+            <h2>New Arrivals</h2>
+            {productByArrival?.map((product, i) => (
+              <ProductCard key={i} product={product} />
+            ))}
+          </div>
+        </div>
       </Layout>
     </React.Fragment>
   );

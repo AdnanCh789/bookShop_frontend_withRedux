@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import http from "../../../services/httpService";
+import { useDispatch } from "react-redux";
 import Input from "../../common/Input";
 import { ShowError, RedirectUser } from "../../helper/helper";
-
-import { API } from "../../../config";
+import { signin } from "../userApi";
+import { saveUser } from "../userSlice";
 
 function SignInForm(props) {
+  const dispatch = useDispatch();
   const [values, setValues] = useState({
     name: "",
     email: "",
@@ -25,12 +26,10 @@ function SignInForm(props) {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    let body = { email, password };
     try {
-      const response = await http.post(`${API}/signin`, {
-        email,
-        password,
-      });
-
+      const response = await signin(body);
+      dispatch(saveUser(response.data));
       setValues({ ...values, error: "", redirect: true });
       saveTokenLS(response.headers["x-auth-token"]);
     } catch (ex) {
